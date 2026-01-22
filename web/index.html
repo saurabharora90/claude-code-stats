@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code Stats</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Claude Code Stats</h1>
+            <div class="date-filter">
+                <label>
+                    From: <input type="date" id="startDate">
+                </label>
+                <label>
+                    To: <input type="date" id="endDate">
+                </label>
+                <button id="resetDates">Reset</button>
+            </div>
+            <p class="subtitle" id="dateRange">Loading...</p>
+        </header>
+
+        <section class="stats-cards">
+            <div class="stat-card">
+                <span class="stat-value" id="totalSessions">-</span>
+                <span class="stat-label">Sessions</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="totalMessages">-</span>
+                <span class="stat-label">Messages</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="totalToolCalls">-</span>
+                <span class="stat-label">Tool Calls</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-value" id="totalProjects">-</span>
+                <span class="stat-label">Projects</span>
+            </div>
+            <div class="stat-card highlight">
+                <span class="stat-value" id="totalCost">-</span>
+                <span class="stat-label">Est. Cost</span>
+            </div>
+            <div class="stat-card highlight-green">
+                <span class="stat-value" id="cacheSavings">-</span>
+                <span class="stat-label">Cache Savings</span>
+            </div>
+        </section>
+
+        <section class="charts-grid">
+            <div class="chart-card wide">
+                <h2>Daily Activity</h2>
+                <canvas id="activityChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h2>Model Usage</h2>
+                <canvas id="modelChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h2>Peak Hours</h2>
+                <canvas id="hoursChart"></canvas>
+            </div>
+
+            <div class="chart-card wide">
+                <h2>Token Usage Over Time</h2>
+                <canvas id="tokensChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h2>Top Projects</h2>
+                <canvas id="projectsChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h2>Subagent Usage</h2>
+                <canvas id="subagentChart"></canvas>
+            </div>
+
+            <div class="chart-card wide">
+                <h2>Top Tools</h2>
+                <canvas id="toolsChart"></canvas>
+            </div>
+
+            <div class="chart-card wide">
+                <h2>MCP Tools</h2>
+                <canvas id="mcpChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h2>MCP Servers</h2>
+                <canvas id="mcpServersChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h2>Slash Commands</h2>
+                <canvas id="commandsChart"></canvas>
+            </div>
+
+            <div class="chart-card">
+                <h2>User Installed Plugins</h2>
+                <div class="plugins-list" id="pluginsList">
+                    <p class="empty">No plugins installed</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cost & Efficiency Section -->
+        <section class="dashboard-section">
+            <h2 class="section-title">Cost & Efficiency</h2>
+            <p class="section-subtitle">Estimated costs based on Anthropic API pricing (per 1M tokens): Sonnet $3/$15, Opus $15/$75, Haiku $0.25/$1.25 (input/output). Cache read is 10% of input cost.</p>
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h2>Cost by Model</h2>
+                    <canvas id="costByModelChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h2>Cache Efficiency</h2>
+                    <canvas id="cacheChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Performance Section -->
+        <section class="dashboard-section">
+            <h2 class="section-title">Performance</h2>
+            <div class="charts-grid">
+                <div class="chart-card wide">
+                    <h2>Response Time (Turn Duration)</h2>
+                    <canvas id="durationChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h2>API Reliability</h2>
+                    <canvas id="reliabilityChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h2>Tool Success Rate</h2>
+                    <canvas id="toolSuccessChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Productivity Section -->
+        <section class="dashboard-section">
+            <h2 class="section-title">Productivity</h2>
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h2>Task Completion</h2>
+                    <canvas id="tasksChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h2>Plan Activity</h2>
+                    <canvas id="plansChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Deep Dive Section -->
+        <section class="dashboard-section">
+            <h2 class="section-title">Deep Dive</h2>
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h2>File Edit Velocity</h2>
+                    <div class="stats-mini" id="fileEditStats">
+                        <p class="empty">No file edit data</p>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h2>Extended Thinking</h2>
+                    <div class="stats-mini" id="thinkingStats">
+                        <p class="empty">No thinking data</p>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h2>Conversation Depth</h2>
+                    <div class="stats-mini" id="sessionDepthStats">
+                        <p class="empty">No conversation depth data</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>Generated by <a href="https://github.com/saurabharora90/claude-code-stats" target="_blank">claude-code-stats</a></p>
+            <p class="generated-at" id="generatedAt"></p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
