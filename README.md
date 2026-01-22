@@ -71,14 +71,6 @@ pip install .
 claude-stats
 ```
 
-### Option 3: Development Install
-
-```bash
-git clone https://github.com/saurabharora90/claude-code-stats.git
-cd claude-code-stats
-pip install -e ".[dev]"
-```
-
 ## Usage
 
 ```bash
@@ -134,26 +126,6 @@ The tool reads from these files in your `.claude` folder:
 | `file-history/` | File edit patterns |
 | `settings.json` | Enabled plugins |
 | `history.jsonl` | Slash command usage |
-
-## Project Structure
-
-```
-claude-code-stats/
-├── src/claude_code_stats/
-│   ├── __init__.py       # Package version
-│   ├── __main__.py       # python -m entry point
-│   ├── cli.py            # CLI entry point
-│   ├── parser.py         # .claude folder parsing
-│   ├── models.py         # Data classes
-│   └── exporters.py      # JSON/HTML generation
-├── web/
-│   ├── index.html        # Dashboard template
-│   ├── style.css         # Dark theme styling
-│   └── app.js            # Chart.js visualizations
-├── pyproject.toml        # Package configuration
-├── README.md             # This file
-└── METRICS.md            # Metrics documentation
-```
 
 ## Contributing
 
