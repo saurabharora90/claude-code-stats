@@ -292,6 +292,15 @@ header h1 {
     color: var(--chart-4);
 }
 
+/* Chart notes */
+.chart-note {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-style: italic;
+    margin-top: -0.5rem;
+    margin-bottom: 0.75rem;
+}
+
 footer {
     text-align: center;
     padding-top: 2rem;

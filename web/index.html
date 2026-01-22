@@ -51,66 +51,26 @@
             </div>
         </section>
 
-        <section class="charts-grid">
-            <div class="chart-card wide">
-                <h2>Daily Activity</h2>
-                <canvas id="activityChart"></canvas>
-            </div>
-
-            <div class="chart-card">
-                <h2>Model Usage</h2>
-                <canvas id="modelChart"></canvas>
-            </div>
-
-            <div class="chart-card">
-                <h2>Peak Hours</h2>
-                <canvas id="hoursChart"></canvas>
-            </div>
-
-            <div class="chart-card wide">
-                <h2>Token Usage Over Time</h2>
-                <canvas id="tokensChart"></canvas>
-            </div>
-
-            <div class="chart-card">
-                <h2>Top Projects</h2>
-                <canvas id="projectsChart"></canvas>
-            </div>
-
-            <div class="chart-card">
-                <h2>Subagent Usage</h2>
-                <canvas id="subagentChart"></canvas>
-            </div>
-
-            <div class="chart-card wide">
-                <h2>Top Tools</h2>
-                <canvas id="toolsChart"></canvas>
-            </div>
-
-            <div class="chart-card wide">
-                <h2>MCP Tools</h2>
-                <canvas id="mcpChart"></canvas>
-            </div>
-
-            <div class="chart-card">
-                <h2>MCP Servers</h2>
-                <canvas id="mcpServersChart"></canvas>
-            </div>
-
-            <div class="chart-card">
-                <h2>Slash Commands</h2>
-                <canvas id="commandsChart"></canvas>
-            </div>
-
-            <div class="chart-card">
-                <h2>User Installed Plugins</h2>
-                <div class="plugins-list" id="pluginsList">
-                    <p class="empty">No plugins installed</p>
+        <!-- Activity Section (filtered by date) -->
+        <section class="dashboard-section">
+            <h2 class="section-title">Activity</h2>
+            <div class="charts-grid">
+                <div class="chart-card wide">
+                    <h2>Daily Activity</h2>
+                    <canvas id="activityChart"></canvas>
+                </div>
+                <div class="chart-card wide">
+                    <h2>Token Usage Over Time</h2>
+                    <canvas id="tokensChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h2>Top Projects</h2>
+                    <canvas id="projectsChart"></canvas>
                 </div>
             </div>
         </section>
 
-        <!-- Cost & Efficiency Section -->
+        <!-- Cost & Efficiency Section (filtered by date) -->
         <section class="dashboard-section">
             <h2 class="section-title">Cost & Efficiency</h2>
             <p class="section-subtitle">Estimated costs based on Anthropic API pricing (per 1M tokens): Sonnet $3/$15, Opus $15/$75, Haiku $0.25/$1.25 (input/output). Cache read is 10% of input cost.</p>
@@ -126,7 +86,7 @@
             </div>
         </section>
 
-        <!-- Performance Section -->
+        <!-- Performance Section (filtered by date) -->
         <section class="dashboard-section">
             <h2 class="section-title">Performance</h2>
             <div class="charts-grid">
@@ -138,31 +98,75 @@
                     <h2>API Reliability</h2>
                     <canvas id="reliabilityChart"></canvas>
                 </div>
-                <div class="chart-card">
-                    <h2>Tool Success Rate</h2>
-                    <canvas id="toolSuccessChart"></canvas>
-                </div>
             </div>
         </section>
 
-        <!-- Productivity Section -->
+        <!-- Productivity Section (partially filtered) -->
         <section class="dashboard-section">
             <h2 class="section-title">Productivity</h2>
             <div class="charts-grid">
                 <div class="chart-card">
-                    <h2>Task Completion</h2>
-                    <canvas id="tasksChart"></canvas>
-                </div>
-                <div class="chart-card">
                     <h2>Plan Activity</h2>
                     <canvas id="plansChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h2>Task Completion</h2>
+                    <p class="chart-note">All-time data</p>
+                    <canvas id="tasksChart"></canvas>
                 </div>
             </div>
         </section>
 
-        <!-- Deep Dive Section -->
+        <!-- All-Time Statistics Section -->
         <section class="dashboard-section">
-            <h2 class="section-title">Deep Dive</h2>
+            <h2 class="section-title">All-Time Statistics</h2>
+            <p class="section-subtitle">These metrics show totals across your entire usage history and are not affected by the date filter.</p>
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h2>Model Usage</h2>
+                    <canvas id="modelChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h2>Peak Hours</h2>
+                    <canvas id="hoursChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h2>Subagent Usage</h2>
+                    <canvas id="subagentChart"></canvas>
+                </div>
+                <div class="chart-card wide">
+                    <h2>Top Tools</h2>
+                    <canvas id="toolsChart"></canvas>
+                </div>
+                <div class="chart-card wide">
+                    <h2>MCP Tools</h2>
+                    <canvas id="mcpChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h2>MCP Servers</h2>
+                    <canvas id="mcpServersChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h2>Slash Commands</h2>
+                    <canvas id="commandsChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h2>Tool Success Rate</h2>
+                    <canvas id="toolSuccessChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <h2>User Installed Plugins</h2>
+                    <div class="plugins-list" id="pluginsList">
+                        <p class="empty">No plugins installed</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Session Totals Section -->
+        <section class="dashboard-section">
+            <h2 class="section-title">Session Totals</h2>
+            <p class="section-subtitle">Aggregate statistics across all sessions. Not affected by the date filter.</p>
             <div class="charts-grid">
                 <div class="chart-card">
                     <h2>File Edit Velocity</h2>
