@@ -2,7 +2,7 @@
 
 A visualization dashboard for your [Claude Code](https://docs.anthropic.com/en/docs/claude-code) usage patterns. Generates a static HTML dashboard from your local `.claude` folder data.
 
-![Dashboard Screenshot](https://via.placeholder.com/800x400?text=Claude+Code+Stats+Dashboard)
+![Dashboard Demo](screenshots/dashboard.gif)
 
 ## Quick Start
 
