@@ -7,16 +7,11 @@ A visualization dashboard for your [Claude Code](https://docs.anthropic.com/en/d
 ## Quick Start
 
 ```bash
-pip install git+https://github.com/saurabharora90/claude-code-stats.git
+pip install cc-stats
 claude-stats
 ```
 
 The dashboard opens automatically in your browser.
-
-To update to the latest version:
-```bash
-pip install --upgrade git+https://github.com/saurabharora90/claude-code-stats.git
-```
 
 ## Features
 
@@ -51,24 +46,23 @@ pip install --upgrade git+https://github.com/saurabharora90/claude-code-stats.gi
 
 ## Installation
 
-### Option 1: pip install from GitHub (Recommended)
+### Option 1: PyPI (Recommended)
 
 ```bash
-pip install git+https://github.com/saurabharora90/claude-code-stats.git
+pip install cc-stats
 ```
 
 To update:
 ```bash
-pip install --upgrade git+https://github.com/saurabharora90/claude-code-stats.git
+pip install --upgrade cc-stats
 ```
 
-### Option 2: Clone and Run Locally
+### Option 2: From Source
 
 ```bash
 git clone https://github.com/saurabharora90/claude-code-stats.git
 cd claude-code-stats
 pip install .
-claude-stats
 ```
 
 ## Usage

@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "claude-code-stats"
+name = "cc-stats"
 version = "0.1.0"
 description = "Visualize Claude Code usage patterns from your .claude folder"
 readme = "README.md"
@@ -45,10 +45,6 @@ Homepage = "https://github.com/saurabharora90/claude-code-stats"
 Repository = "https://github.com/saurabharora90/claude-code-stats"
 Issues = "https://github.com/saurabharora90/claude-code-stats/issues"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/claude_code_stats"]
-artifacts = ["src/claude_code_stats/web/*"]
-
 [tool.hatch.build.targets.sdist]
 include = [
     "src/",
@@ -57,11 +53,11 @@ include = [
     "LICENSE",
 ]
 
-[tool.hatch.build]
-only-include = ["src/claude_code_stats", "web"]
+[tool.hatch.build.targets.wheel]
+packages = ["src/claude_code_stats"]
 
-[tool.hatch.build.force-include]
-"web" = "src/claude_code_stats/web"
+[tool.hatch.build.targets.wheel.force-include]
+"web" = "claude_code_stats/web"
 
 [tool.ruff]
 target-version = "py39"
