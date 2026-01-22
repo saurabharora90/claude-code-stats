@@ -132,6 +132,72 @@ function filterStatsByDateRange(stats, startDate, endDate) {
     const totalSessions = filteredDailyActivity.reduce((sum, d) => sum + (d.sessionCount || 0), 0);
     const totalToolCalls = filteredDailyActivity.reduce((sum, d) => sum + (d.toolCallCount || 0), 0);
 
+    // Filter and recalculate cost estimate
+    let filteredCostEstimate = stats.costEstimate;
+    if (stats.costEstimate && stats.costEstimate.costByDay) {
+        const filteredCostByDay = stats.costEstimate.costByDay.filter(d => filterByDate(d.date));
+        const filteredTotalCost = filteredCostByDay.reduce((sum, d) => sum + (d.cost || 0), 0);
+
+        // Recalculate cost by model from filtered daily data
+        const filteredCostByModel = {};
+        filteredCostByDay.forEach(d => {
+            if (d.costByModel) {
+                Object.entries(d.costByModel).forEach(([model, cost]) => {
+                    filteredCostByModel[model] = (filteredCostByModel[model] || 0) + cost;
+                });
+            }
+        });
+
+        // Recalculate cache savings proportionally
+        const totalDays = (stats.costEstimate.costByDay || []).length;
+        const filteredDays = filteredCostByDay.length;
+        const savingsRatio = totalDays > 0 ? filteredDays / totalDays : 0;
+        const filteredCacheSavings = stats.costEstimate.cacheSavingsUsd * savingsRatio;
+
+        filteredCostEstimate = {
+            ...stats.costEstimate,
+            totalCostUsd: filteredTotalCost,
+            costByModel: Object.keys(filteredCostByModel).length > 0 ? filteredCostByModel : stats.costEstimate.costByModel,
+            costByDay: filteredCostByDay,
+            cacheSavingsUsd: filteredCacheSavings,
+        };
+    }
+
+    // Filter and recalculate cache metrics from daily model tokens
+    let filteredCacheMetrics = stats.cacheMetrics;
+    if (stats.cacheMetrics && filteredDailyModelTokens.length > 0) {
+        // Estimate cache metrics proportionally based on filtered days
+        const totalDays = (stats.dailyModelTokens || []).length;
+        const filteredDays = filteredDailyModelTokens.length;
+        const ratio = totalDays > 0 ? filteredDays / totalDays : 0;
+
+        filteredCacheMetrics = {
+            ...stats.cacheMetrics,
+            totalCacheReadTokens: Math.round(stats.cacheMetrics.totalCacheReadTokens * ratio),
+            totalCacheWriteTokens: Math.round(stats.cacheMetrics.totalCacheWriteTokens * ratio),
+            tokensSaved: Math.round(stats.cacheMetrics.tokensSaved * ratio),
+            // Cache hit ratio stays the same (it's a ratio, not absolute)
+        };
+    }
+
+    // Filter turn durations
+    const filteredTurnDurations = (stats.turnDurations || []).filter(d => filterByDate(d.date));
+
+    // Filter API errors
+    const filteredApiErrors = (stats.apiErrors || []).filter(d => filterByDate(d.date));
+
+    // Filter plan stats
+    let filteredPlanStats = stats.planStats;
+    if (stats.planStats && stats.planStats.byDate) {
+        const filteredByDate = stats.planStats.byDate.filter(d => filterByDate(d.date));
+        const filteredTotalPlans = filteredByDate.reduce((sum, d) => sum + (d.count || 0), 0);
+        filteredPlanStats = {
+            ...stats.planStats,
+            totalPlans: filteredTotalPlans,
+            byDate: filteredByDate,
+        };
+    }
+
     return {
         ...stats,
         dailyActivity: filteredDailyActivity,
@@ -141,6 +207,11 @@ function filterStatsByDateRange(stats, startDate, endDate) {
         totalSessions: totalSessions || stats.totalSessions,
         totalToolCalls: totalToolCalls || stats.totalToolCalls,
         totalProjects: filteredProjectStats.length,
+        costEstimate: filteredCostEstimate,
+        cacheMetrics: filteredCacheMetrics,
+        turnDurations: filteredTurnDurations,
+        apiErrors: filteredApiErrors,
+        planStats: filteredPlanStats,
     };
 }
 

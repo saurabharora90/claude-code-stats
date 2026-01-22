@@ -279,7 +279,9 @@ def get_model_pricing_key(model: str) -> str:
     return "sonnet"  # Default to sonnet
 
 
-def parse_cost_and_cache(model_usage: list[ModelUsage]) -> tuple[CostEstimate, CacheMetrics]:
+def parse_cost_and_cache(
+    model_usage: list[ModelUsage], daily_model_tokens: list[DailyModelTokens]
+) -> tuple[CostEstimate, CacheMetrics]:
     """Calculate costs and cache metrics from model usage data."""
     total_cost = 0.0
     cost_by_model = {}
@@ -319,10 +321,29 @@ def parse_cost_and_cache(model_usage: list[ModelUsage]) -> tuple[CostEstimate, C
     total_cache_ops = total_cache_read + total_cache_write
     cache_hit_ratio = total_cache_read / total_cache_ops if total_cache_ops > 0 else 0.0
 
+    # Calculate daily costs from daily_model_tokens
+    cost_by_day = []
+    for daily in daily_model_tokens:
+        day_cost = 0.0
+        day_cost_by_model = {}
+        for model, tokens in daily.tokens_by_model.items():
+            pricing_key = get_model_pricing_key(model)
+            pricing = PRICING.get(pricing_key, PRICING["sonnet"])
+            # Use output price as approximation (most expensive, conservative estimate)
+            # We don't have input/output/cache breakdown per day, only total tokens
+            model_day_cost = (tokens / 1_000_000) * pricing["output"]
+            day_cost += model_day_cost
+            day_cost_by_model[model] = round(model_day_cost, 4)
+        cost_by_day.append({
+            "date": daily.date,
+            "cost": round(day_cost, 4),
+            "costByModel": day_cost_by_model,
+        })
+
     cost_estimate = CostEstimate(
         total_cost_usd=round(total_cost, 2),
         cost_by_model={k: round(v, 2) for k, v in cost_by_model.items()},
-        cost_by_day=[],  # Will be populated from daily data
+        cost_by_day=cost_by_day,
         cache_savings_usd=round(cache_savings, 2),
     )
 
@@ -871,7 +892,7 @@ def parse_claude_folder(claude_path: Path) -> ClaudeStats:
         total_tool_calls = daily_sum if daily_sum > 0 else parsed_sum
 
     # Parse new v2 analytics
-    cost_estimate, cache_metrics = parse_cost_and_cache(model_usage)
+    cost_estimate, cache_metrics = parse_cost_and_cache(model_usage, daily_model_tokens)
     turn_durations = parse_turn_durations_from_jsonl(all_jsonl_files)
     api_errors = parse_api_errors_from_jsonl(all_jsonl_files)
     task_stats = parse_todos(claude_path)
